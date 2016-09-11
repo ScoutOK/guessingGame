@@ -102,7 +102,8 @@ $(document).ready(function() {
 			if (game.isLower() == true) {
 				whichWay = "too low";
 			}
-			hintText = response + "Your last guess was " + whichWay;
+			hintText = response + " Your last guess was " + whichWay;
+			$('h2').text("Guess again");
 		}
 		//put guesses into li elements under input field
 		$('ul li:nth-child(' + game.pastGuesses.length + ')').text(game.pastGuesses[game.pastGuesses.length - 1]);
