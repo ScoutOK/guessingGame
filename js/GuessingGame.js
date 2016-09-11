@@ -1,3 +1,4 @@
+//game functionality w/o html
 var generateWinningNumber = function () {
 	return Math.floor(100 * Math.random()) + 1;
 }
@@ -79,3 +80,55 @@ Game.prototype.provideHint = function () {
 	shuffle(hints);
 	return hints;
 }
+
+//to integrate the html
+
+
+$(document).ready(function() {
+	var game = newGame();
+
+	var hintText = "You haven't guessed yet!"
+
+	var collectGuess = function () {
+		var response = game.playersGuessSubmission(parseInt($('#player-input').val()));
+		if (response == 'You have already guessed that number.') {
+			$('h1').text(response);
+		}else if (response == 'You Win!' || response == "You Lose.") {
+			$('h1').text(response);
+			$('h2').text("Click the reset button to play again");
+			$('#hint, #submit').prop("disabled",true);
+		} else {
+			var whichWay = "too high";
+			if (game.isLower() == true) {
+				whichWay = "too low";
+			}
+			hintText = response + "Your last guess was " + whichWay;
+		}
+		//put guesses into li elements under input field
+		$('ul li:nth-child(' + game.pastGuesses.length + ')').text(game.pastGuesses[game.pastGuesses.length - 1]);
+		$('#player-input').val("");
+	}
+
+	$('#submit').click(function(){
+		collectGuess();
+	})
+
+	$('#player-input').keypress(function(event) {
+
+        if ( event.which == 13 && $('#submit').prop("disabled") == false) {
+           collectGuess();
+        }
+    })
+
+    $('#hint').click(function(){
+    	$('h2').text(hintText);
+    })
+
+    $('#reset').click(function(){
+    	game = newGame();
+    	$('h1').text('Guessing Game');
+		$('h2').text('Guess a number between 1 and 100');
+		$('ul li').text('-');
+    	$('#hint, #submit').prop("disabled",false);
+    })
+});
